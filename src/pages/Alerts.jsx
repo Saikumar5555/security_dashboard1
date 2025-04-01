@@ -283,41 +283,43 @@ const AlertsPage = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex justify-between items-start">
-            <div className="text-xl p-2 bg-blue-50 text-blue-500 rounded-lg">
-              <ImNotification />
-            </div>
-            <span className="text-xs font-medium bg-blue-100 text-blue-600 px-2 py-1 rounded-full">All</span>
-          </div>
-          <p className="text-sm text-gray-500 mt-2">Total Alerts</p>
-          <p className="text-2xl font-bold">{incidentCounts.total}</p>
-        </div>
+      
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+    <div className="flex justify-between items-start">
+      <div className="text-xl p-2 bg-blue-50 text-blue-500 rounded-lg">
+        <ImNotification />
+      </div>
+      <span className="text-xs font-medium bg-blue-100 text-blue-600 px-2 py-1 rounded-full">All</span>
+    </div>
+    <p className="text-sm text-gray-500 mt-2">Total Alerts</p>
+    <p className="text-2xl font-bold">{incidentCounts.total}</p>
+  </div>
+  
+  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+    <div className="flex justify-between items-start">
+      <div className="text-xl p-2 bg-red-50 text-red-500 rounded-lg">
+        <FaUserNinja />
+      </div>
+      <span className="text-xs font-medium bg-red-100 text-red-600 px-2 py-1 rounded-full">Critical</span>
+    </div>
+    <p className="text-sm text-gray-500 mt-2">Theft Alerts</p>
+    <p className="text-2xl font-bold">{incidentCounts.theft}</p>
+  </div>
+  
+  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+    <div className="flex justify-between items-start">
+      <div className="text-xl p-2 bg-yellow-50 text-yellow-500 rounded-lg">
+        <FaUserClock />
+      </div>
+      <span className="text-xs font-medium bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full">Warning</span>
+    </div>
+    <p className="text-sm text-gray-500 mt-2">Loitering</p>
+    <p className="text-2xl font-bold">{incidentCounts.loitering}</p>
+  </div>
+
         
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex justify-between items-start">
-            <div className="text-xl p-2 bg-red-50 text-red-500 rounded-lg">
-              <FaUserNinja />
-            </div>
-            <span className="text-xs font-medium bg-red-100 text-red-600 px-2 py-1 rounded-full">Critical</span>
-          </div>
-          <p className="text-sm text-gray-500 mt-2">Theft Alerts</p>
-          <p className="text-2xl font-bold">{incidentCounts.theft}</p>
-        </div>
-        
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-          <div className="flex justify-between items-start">
-            <div className="text-xl p-2 bg-yellow-50 text-yellow-500 rounded-lg">
-              <FaUserClock />
-            </div>
-            <span className="text-xs font-medium bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full">Warning</span>
-          </div>
-          <p className="text-sm text-gray-500 mt-2">Loitering</p>
-          <p className="text-2xl font-bold">{incidentCounts.loitering}</p>
-        </div>
-        
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        {/* <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
           <div className="flex justify-between items-start">
             <div className="text-xl p-2 bg-purple-50 text-purple-500 rounded-lg">
               <FaBell />
@@ -346,7 +348,7 @@ const AlertsPage = () => {
           </div>
           <p className="text-sm text-gray-500 mt-2">New Alerts</p>
           <p className="text-2xl font-bold">{incidentCounts.new}</p>
-        </div>
+        </div> */}
       </div>
       
       {/* Filter Controls - Conditional */}
@@ -445,67 +447,78 @@ const AlertsPage = () => {
       {/* Content Based on Active Tab */}
       {activeTab === 'heatmap' ? (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-          <h2 className="text-xl font-semibold mb-4">Security Incident Map</h2>
-          <div className="h-[600px] w-full rounded-lg overflow-hidden">
-            <MapContainer center={[40.738817, -73.965428]} zoom={14} style={{ height: '100%', width: '100%' }}>
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              
-              {/* Location Zones */}
-              {locationStructure.map((zone) => (
-                <Rectangle
-                  key={zone.id}
-                  bounds={zone.bounds}
-                  pathOptions={{ 
-                    color: zone.fillColor,
-                    weight: 1,
-                    fillOpacity: 0.4
-                  }}
-                >
-                  <Popup>
-                    <div className="p-1">
-                      <h3 className="font-semibold">{zone.name}</h3>
-                      <p className="text-sm">Crowd Density: {zone.crowdDensity}%</p>
-                      <p className="text-sm">Incidents: {zone.incidents}</p>
-                    </div>
-                  </Popup>
-                </Rectangle>
-              ))}
-              
-              {/* Incident Markers */}
-              {dummyIncidents.map((incident) => (
-                <Circle
-                  key={incident.id}
-                  center={incident.coordinates}
-                  radius={50}
-                  pathOptions={{
-                    color: incident.severity === 'high' ? '#DC2626' : 
-                           incident.severity === 'medium' ? '#F59E0B' : '#10B981',
-                    fillColor: incident.severity === 'high' ? '#DC2626' : 
-                              incident.severity === 'medium' ? '#F59E0B' : '#10B981',
-                    fillOpacity: 0.7
-                  }}
-                >
-                  <Popup>
-                    <div className="p-1">
-                      <h3 className="font-semibold">{incident.type}</h3>
-                      <p className="text-sm">{incident.location}</p>
-                      <p className="text-sm">{incident.description}</p>
-                      <p className="text-xs text-gray-500">
-                        {new Date(incident.timestamp).toLocaleString()}
-                      </p>
-                      <button 
-                        className="mt-2 px-2 py-1 bg-blue-500 text-white text-xs rounded"
-                        onClick={() => viewIncidentDetails(incident)}
-                      >
-                        View Details
-                      </button>
-                    </div>
-                  </Popup>
-                </Circle>
-              ))}
-            </MapContainer>
-          </div>
+        <h2 className="text-xl font-semibold mb-4">Security Incident Map</h2>
+        <div className="relative" style={{ height: '600px', width: '100%' }}>
+          <MapContainer 
+            center={[40.738817, -73.965428]} 
+            zoom={14} 
+            style={{ 
+              height: '100%', 
+              width: '100%', 
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              borderRadius: '0.5rem',
+              overflow: 'hidden'
+            }}
+          >
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            
+            {/* Rest of your map content remains exactly the same */}
+            {locationStructure.map((zone) => (
+              <Rectangle
+                key={zone.id}
+                bounds={zone.bounds}
+                pathOptions={{ 
+                  color: zone.fillColor,
+                  weight: 1,
+                  fillOpacity: 0.4
+                }}
+              >
+                <Popup>
+                  <div className="p-1">
+                    <h3 className="font-semibold">{zone.name}</h3>
+                    <p className="text-sm">Crowd Density: {zone.crowdDensity}%</p>
+                    <p className="text-sm">Incidents: {zone.incidents}</p>
+                  </div>
+                </Popup>
+              </Rectangle>
+            ))}
+            
+            {dummyIncidents.map((incident) => (
+              <Circle
+                key={incident.id}
+                center={incident.coordinates}
+                radius={50}
+                pathOptions={{
+                  color: incident.severity === 'high' ? '#DC2626' : 
+                         incident.severity === 'medium' ? '#F59E0B' : '#10B981',
+                  fillColor: incident.severity === 'high' ? '#DC2626' : 
+                            incident.severity === 'medium' ? '#F59E0B' : '#10B981',
+                  fillOpacity: 0.7
+                }}
+              >
+                <Popup>
+                  <div className="p-1">
+                    <h3 className="font-semibold">{incident.type}</h3>
+                    <p className="text-sm">{incident.location}</p>
+                    <p className="text-sm">{incident.description}</p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(incident.timestamp).toLocaleString()}
+                    </p>
+                    <button 
+                      className="mt-2 px-2 py-1 bg-blue-500 text-white text-xs rounded"
+                      onClick={() => viewIncidentDetails(incident)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </Popup>
+              </Circle>
+            ))}
+          </MapContainer>
         </div>
+      </div>
       ) : activeTab === 'trends' ? (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
           <h2 className="text-xl font-semibold mb-4">Incident Trends</h2>

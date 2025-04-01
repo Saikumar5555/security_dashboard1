@@ -7,6 +7,7 @@ import SystemStatus from './pages/SystemStatus';
 import Datacollection from './pages/Datacollection';
 import DailyReport from './pages/DailyReport';
 import AlertsPage from './pages/Alerts';
+import Suspectlist from './pages/SuspectList'
 import BillingActivityPage from './pages/BillingActivityPage';
 
 function App() {
@@ -14,12 +15,13 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="Live-Feed" element={<Cameras />} />
-        <Route path="dailyreport" element={<DailyReport />} />
+        {/* <Route path="Live-Feed" element={<Cameras />} />
+        <Route path="dailyreport" element={<DailyReport />} /> */}
         <Route path="alerts" element={<AlertsPage />} />
-        <Route path="System-Status" element={<SystemStatus />} />
+        <Route path="suspectlist" element={<Suspectlist />} />
+        {/* <Route path="System-Status" element={<SystemStatus />} />
         <Route path="datacollection" element={<Datacollection />} />
-        <Route path="BillingActivityPage" element={<BillingActivityPage />} />
+        <Route path="BillingActivityPage" element={<BillingActivityPage />} /> */}
       </Route>
     </Routes>
   );
